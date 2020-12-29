@@ -84,7 +84,11 @@ def render_animation(keypoints, keypoints_metadata, poses, skeleton, fps, bitrat
     radius = 1.7
     for index, (title, data) in enumerate(poses.items()):
         ax = fig.add_subplot(1, 1 + len(poses), index+2, projection='3d')
-        ax.view_init(elev=15., azim=azim)
+        #ax.view_init(elev=15., azim=azim)
+        ax.view_init(elev=-90., azim=0)
+        ax.set_xlabel('x')
+        ax.set_ylabel('y')
+        ax.set_zlabel('z')
         ax.set_xlim3d([-radius/2, radius/2])
         ax.set_zlim3d([0, radius])
         ax.set_ylim3d([-radius/2, radius/2])
@@ -166,10 +170,16 @@ def render_animation(keypoints, keypoints_metadata, poses, skeleton, fps, bitrat
                 col = 'red' if j in skeleton.joints_right() else 'black'
                 for n, ax in enumerate(ax_3d):
                     pos = poses[n][i]
+                    '''
                     lines_3d[n].append(ax.plot([pos[j, 0], pos[j_parent, 0]],
-                                               [pos[j, 1], pos[j_parent, 1]],
-                                               [pos[j, 2], pos[j_parent, 2]], zdir='z', c=col))
-
+                                              [pos[j, 1], pos[j_parent, 1]],
+                                              [pos[j, 2], pos[j_parent, 2]], zdir='z', c=col))
+                    '''
+                        
+                    lines_3d[n].append(ax.plot([0,0],
+                                              [0,0],
+                                              [0,0], zdir='z', c=col))
+                    
             points = ax_in.scatter(*keypoints[i].T, 10, color=colors_2d, edgecolors='white', zorder=10)
 
             initialized = True
@@ -180,15 +190,20 @@ def render_animation(keypoints, keypoints_metadata, poses, skeleton, fps, bitrat
                 if j_parent == -1:
                     continue
                 
-                if len(parents) == keypoints.shape[1] and keypoints_metadata['layout_name'] != 'coco':
-                    lines[j-1][0].set_data([keypoints[i, j, 0], keypoints[i, j_parent, 0]],
-                                           [keypoints[i, j, 1], keypoints[i, j_parent, 1]])
+                if j == 1 or j == 4:
+                #if j == 11 or j == 14:
+                #if j > 10 and j < 17:
 
-                for n, ax in enumerate(ax_3d):
+                  if len(parents) == keypoints.shape[1] and keypoints_metadata['layout_name'] != 'coco':
+                    lines[j-1][0].set_data([keypoints[i, j, 0], keypoints[i, j_parent, 0]],
+                                            [keypoints[i, j, 1], keypoints[i, j_parent, 1]])
+
+                  for n, ax in enumerate(ax_3d):
                     pos = poses[n][i]
-                    lines_3d[n][j-1][0].set_xdata(np.array([pos[j, 0], pos[j_parent, 0]]))
-                    lines_3d[n][j-1][0].set_ydata(np.array([pos[j, 1], pos[j_parent, 1]]))
-                    lines_3d[n][j-1][0].set_3d_properties(np.array([pos[j, 2], pos[j_parent, 2]]), zdir='z')
+                    scale = 1.
+                    lines_3d[n][j-1][0].set_xdata(np.array([pos[j, 0] * scale, pos[j_parent, 0] * scale]))
+                    lines_3d[n][j-1][0].set_ydata(np.array([pos[j, 1] * scale, pos[j_parent, 1] * scale]))
+                    lines_3d[n][j-1][0].set_3d_properties(np.array([pos[j, 2] * scale, pos[j_parent, 2] * scale]), zdir='z')
 
             points.set_offsets(keypoints[i])
         
@@ -200,7 +215,7 @@ def render_animation(keypoints, keypoints_metadata, poses, skeleton, fps, bitrat
     anim = FuncAnimation(fig, update_video, frames=np.arange(0, limit), interval=1000/fps, repeat=False)
     if output.endswith('.mp4'):
         Writer = writers['ffmpeg']
-        writer = Writer(fps=fps, metadata={}, bitrate=bitrate)
+        writer = Writer(fps=10, metadata={}, bitrate=bitrate)
         anim.save(output, writer=writer)
     elif output.endswith('.gif'):
         anim.save(output, dpi=80, writer='imagemagick')
