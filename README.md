@@ -1,4 +1,4 @@
-http://colab.research.google.com/github/<username>/blob/<branch>/<filepath to .ipynb>
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](http://colab.research.google.com/github/<username>/blob/<branch>/<https://github.com/kuboyoo/VideoPose3D/blob/master/VideoPose3D.ipynb>)
 
 # 3D human pose estimation in video with temporal convolutions and semi-supervised training
 <p align="center"><img src="images/convolutions_anim.gif" width="50%" alt="" /></p>
