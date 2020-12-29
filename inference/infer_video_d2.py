@@ -85,7 +85,7 @@ def main(args):
     cfg = get_cfg()
     cfg.merge_from_file(model_zoo.get_config_file(args.cfg))
     cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.7
-    cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url(args.cfg)
+    cfg.MODEL.WEIGHTS = 'model_final_997cc7.pkl'#model_zoo.get_checkpoint_url(args.cfg)
     predictor = DefaultPredictor(cfg)
     
 
