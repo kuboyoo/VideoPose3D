@@ -1,3 +1,5 @@
+http://colab.research.google.com/github/<username>/blob/<branch>/<filepath to .ipynb>
+
 # 3D human pose estimation in video with temporal convolutions and semi-supervised training
 <p align="center"><img src="images/convolutions_anim.gif" width="50%" alt="" /></p>
 
